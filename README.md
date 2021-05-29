@@ -230,7 +230,7 @@ This language also uses several types for simplicity:
 * `Iterable<T>` is any iterable type whose values are of type `T`. It has a property `iterator` which is an `Iterator<T>`. It is a property as some iterable may only be traversed forward and once (e.g. seeded sequence)
 * `Iterator<T>` is used to check validity and traverse its associated iterable
 * `[A, B, C]` is a tuple whose first value is of type `A`, second value of type `B` and third value of type `C`. It is convertible to `Either<A, Either<B, C>>`.
-* `Class<T>` a way to hold information of the type `T` so it can be used dynamically with `instanceof`. It also offers a method called `template <U> T cast(Convertible<U, T> value)` to cast to that type.
+* `Class<T>` a way to hold information of the type `T` so it can be used dynamically with `instanceof`. It also offers a method called `template <U> T cast(Convertible<U, T> value)` to cast to that type. `MyClass.cast` is also that method.
 
 ## Known implementations
 

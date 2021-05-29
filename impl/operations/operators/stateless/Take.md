@@ -24,6 +24,6 @@ template <T>
 @ExtensionMethod
 Stream<T> take(Stream<T> this, int maxAmount) {
 	int count = 0;
-	return this.takeWhile(() => count++ < maxAmount);
+	return this.takeWhile(() => count++ < maxAmount)
 }
 ```
