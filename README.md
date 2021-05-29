@@ -28,6 +28,10 @@ Implementation details are in the `impl` folder.
 * Java 8's [Stream API](https://docs.oracle.com/javase/8/docs/api/java/util/stream/package-summary.html)
 * Kotlin's [sequences](https://kotlinlang.org/docs/sequences.html)
 * Rust's [iter](https://doc.rust-lang.org/std/iter/index.html#laziness)
+* Writing my own stuff for lolz
+	* [Streams in the Support Class Library (C++)](https://github.com/Voltra/SupportClassLibrary/tree/master/include/scl/stream)
+	* [Lazy Collection (PHP)](https://github.com/Voltra/lazy-collection)
+	* [Streamz (JS)](https://github.com/Voltra/streamz)
 
 
 
@@ -37,7 +41,7 @@ A **Stream** is a (maybe infinite) sequence of data of one particular type (e.g.
 
 An **Operation** is a [morphism](https://en.wikipedia.org/wiki/Morphism) that transforms values of one type into values of another type (which may be the same).
 
-A **Creator** is an *Operation* that transforms data that is not a *Stream* into a *Stream*. For instance: `streamFromArray([])`. 
+A **Creator** is an *Operation* that transforms data that is not a *Stream* into a *Stream*. For instance: `streamFromArray([])`.
 
 An **Operator** is an *Operation* that transforms a *Stream* of a given type into a *Stream* of another type (which may be the same). For instance: `stream.map(identity)`. These operations are lazy evaluated, meaning they are not evaluated until a *Terminator* is applied. An *Operator* may be *Stateful* or *Stateless*. These operations are lazy evaluated, meaning they are not evaluated until a *Terminator* is applied.
 
@@ -206,13 +210,13 @@ class MyClass : MyBaseClass, MyInterface, MyCrtp<static> {
 	constructor(int stuff){
 		this.stuff = 0;
 	}
-	
+
 	protected:
 		int stuff;
-		
+
 	public:
 		int getStuff(){ return this.stuff; }
-		
+
 	private:
 		float stuff2 = 42.05;
 }
@@ -229,7 +233,7 @@ Classes may nest type alias declarations:
 ```
 class MyClass {
 	type MyAlias = int;
-	
+
 	template <U>
 	type MyArray<U> = U[];
 }
