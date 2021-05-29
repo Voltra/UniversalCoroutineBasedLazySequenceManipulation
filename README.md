@@ -67,6 +67,20 @@ A *Sequence Manipulation* that uses **k** *Stateful Operators* is guaranteed to 
 
 
 
+## Known limitations
+
+### Coroutines/Generators
+
+Languages that do not propose generators/coroutines may not directly implement as is. Although, if you have access to iterators, you may implement everything using those.
+
+### Validity
+
+If you cannot have access to the validity (whether there are more elements or not) and a way to access the current then the following cannot be implemented as is:
+
+* zipWith
+
+
+
 ## Pseudocode language details
 
 This language does not take into account memory management, lifetime and so on. It is your duty to make the right choices in your implementation.
@@ -106,6 +120,15 @@ int zero(int[] this){
 }
 
 [1,2,3].zero() == 0;
+
+class Stuff{
+	constructor(){}
+}
+
+@ExtensionMethod
+Stuff create(){
+	return static{};
+}
 ```
 
 
