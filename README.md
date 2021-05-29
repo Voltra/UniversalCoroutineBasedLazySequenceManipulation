@@ -254,7 +254,6 @@ type MyCallable<T> = (int) => T; // anonymous function, lambda, coroutine factor
 
 This language also uses several types for simplicity:
 
-* `Optional<T>` which is either constructed from `some(T)` or `none`
 * `Either<L, R>` which is either `L` or `R` and is contravariant : we can assign a `T` to a `Either<T, null>`. It is convertible to `Variant<L, R>`.
 * `Nullable<T>` which is `Either<T, null>`
 * `Variant<A, B, ...Types>` which is `A`, `B` or any of the provided `Types`. It is convertible to a tree of `Either` (e.g. `Variant<A, B, C, D>` is also `Either<A, Either<B, Either<C, D>>>`).

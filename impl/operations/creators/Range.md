@@ -1,9 +1,9 @@
 ```
 @FreeFunction
 @StaticMethod
-Stream<int> range(int start = 0, Optional<int> end = none, int step = 1){
+Stream<int> range(int start = 0, Nullable<int> end = null, int step = 1){
 	GeneratorFactory<int> factory = function* () using(start, end, step){
-		if(end != none){
+		if(end != null){
 			int begin = start;
 			int end_ = end;
 			int st = step;
