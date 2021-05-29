@@ -39,7 +39,7 @@ An **Operator** is an *Operation* that transforms a *Stream* of a given type int
 
 **Internal State** designates state that is not directly derived from the input of the *Operation*. For instance: a set a already processed values.
 
-A **Stateful Operator** is an *Operator* that needs to maintain *Internal State* for its evaluation. For instance `stream.unique()` or `stream.take(5)`.
+A **Stateful Operator** is an *Operator* that needs to maintain *Internal State* for its evaluation. For instance `stream.unique()` or `stream.take(5)`. If it does not introduce a change in complexity, then it can be considered *Stateless*.
 
 A **Stateless Operator** is an *Operator* that does not need to maintain internal state for its evaluation. For instance `stream.filter(predicate)`.
 
@@ -47,7 +47,9 @@ A **Terminator** is an *Operation* that transforms a *Stream* of a given type in
 
 A **Coroutine** or **Generator** describes a mechanism that allows to "lazily" provide values *one at a time*. For the sake of implementation, they must be monadic: a *Coroutine* must be able to provide the values of another *Coroutine*; put simple they must be *Iterable*.
 
-An **Iterable** provides an interface to access a sequence of data.
+An **Iterable** provides an *Iterator* to access a sequence of data.
+
+An **Iterator** is a view-like mechanism to traverse a sequence of data that holds info like its validity (are there more?) and the current value.
 
 A **Coroutine/Generator factory** is a special kind of function which, once called, returns a *Coroutine/Generator*.
 
@@ -66,6 +68,10 @@ A *Sequence Manipulation* that uses **k** *Stateful Operators* is guaranteed to 
 
 
 ## Pseudocode language details
+
+This language does not take into account memory management, lifetime and so on. It is your duty to make the right choices in your implementation.
+
+
 
 `template <T>` provides the type `T` as a type argument for generic implementations of classes or functions.
 
@@ -91,7 +97,7 @@ MyType<int>::stuff();
 
 
 
-`@ExtensionMethod` denotes that the decorated function is an (extension) method of the type of the `this` argument of the function which must be present and must be the first. As such, the decorated function cannot be used as a free function. For instance:
+`@ExtensionMethod` denotes that the decorated function is an (extension) method of the type of the `this` argument of the function which must be present and must be the first. As such, the decorated function cannot be used as a free function. As they are extensions, they are public and also have access to private and protected members. Like static methods, they have access to the `static` keyword to refer to the current type.
 
 ```
 @ExtensionMethod
@@ -101,6 +107,10 @@ int zero(int[] this){
 
 [1,2,3].zero() == 0;
 ```
+
+
+
+For simplicity, the `auto` type may be used, it behaves exactly as the C++ keyword.
 
 
 
@@ -124,7 +134,8 @@ auto life = (x = 10) => x + y;
 ```
 auto factory = function* (my_args){
 	yield stuff; // yield a single value
-	yield* [1,2,3]; // yield all from an iterable
+	yield* [1,2,3];
+	// yield all from an iterable, as if using a for loop and yielding each element individually
 };
 
 auto gen = factory(args);
@@ -136,7 +147,7 @@ Callable types may have contravariance/covariance:
 
 ```
 template <Arg, R>
-type MyCallable = (Arg) => R;
+type MyCallable<Arg, R> = (Arg) => R;
 
 MyCallable<String, int> a = str => str.length;
 MyCallable<String, int> b = () => 0; // also valid, just ignores the argument
@@ -144,16 +155,25 @@ MyCallable<String, int> b = () => 0; // also valid, just ignores the argument
 a("str");
 b("str");
 b(); // invalid as it requires an argument even if the implementation doesn't
+
+template <T>
+type MyCallback<T> = (T) => void;
+
+MyCallback<String> a = function(String str){
+	print(str);
+};
+
+MyCallback<String> b = str => str; // also valid, just ignores the return value
 ```
 
 
 
 
 
-Classes encapsulate data with behavior. By default members are public, unless an encapsulation guard is specified. Classes may implement/extend other classes using the `:` notation (as in C++). The use of the `this` keyword is mandatory. Classes may only have one constructor (to allow for maximum interoperability).
+Classes encapsulate data with behavior. By default members are public, unless an encapsulation guard is specified. Classes may implement/extend other classes using the `:` notation (as in C++). The use of the `this` keyword is mandatory. Classes may only have one constructor (to allow for maximum interoperability). The `static` keyword may be used to refer to the current type for inheritance.
 
 ```
-class MyClass : MyBaseClass, MyInterface {
+class MyClass : MyBaseClass, MyInterface, MyCrtp<static> {
 	constructor(int stuff){
 		this.stuff = 0;
 	}
@@ -199,7 +219,18 @@ type MyCallable<T> = (int) => T; // anonymous function, lambda, coroutine factor
 
 
 
+This language also uses several types for simplicity:
 
+* `Optional<T>` which is either constructed from `some(T)` or `none`
+* `Either<L, R>` which is either `L` or `R` and is contravariant : we can assign a `T` to a `Either<T, null>`. It is convertible to `Variant<L, R>`.
+* `Nullable<T>` which is `Either<T, null>`
+* `Variant<A, B, ...Types>` which is `A`, `B` or any of the provided `Types`. It is convertible to a tree of `Either` (e.g. `Variant<A, B, C, D>` is also `Either<A, Either<B, Either<C, D>>>`).
+* `Convertible<A, B>` which means that it is an `A` but can be converted to a `B` (not necessarily vice-versa)
+* `T[]` means an array of `T`
+* `Iterable<T>` is any iterable type whose values are of type `T`. It has a property `iterator` which is an `Iterator<T>`. It is a property as some iterable may only be traversed forward and once (e.g. seeded sequence)
+* `Iterator<T>` is used to check validity and traverse its associated iterable
+* `[A, B, C]` is a tuple whose first value is of type `A`, second value of type `B` and third value of type `C`. It is convertible to `Either<A, Either<B, C>>`.
+* `Class<T>` a way to hold information of the type `T` so it can be used dynamically with `instanceof`. It also offers a method called `template <U> T cast(Convertible<U, T> value)` to cast to that type.
 
 ## Known implementations
 

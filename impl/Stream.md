@@ -1,6 +1,6 @@
 ```
 template <T>
-class Stream<T> : Iterable<T> {
+class Stream<T> : Convertible<static, Iterable<T>> {
 	type GeneratorType = Generator<T>;
 
 	template <U>
@@ -8,6 +8,14 @@ class Stream<T> : Iterable<T> {
 
 	constructor(GeneratorType gen){
 		this.gen = gen;
+	}
+
+	Iterable<T> asIterable(){
+		return this.gen;
+	}
+
+	operator Iterable<T>{
+		return this.asIterable();
 	}
 
 	protected:
