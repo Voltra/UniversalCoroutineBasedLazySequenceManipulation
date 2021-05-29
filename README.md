@@ -17,6 +17,16 @@ It will propose an object oriented representation, it is up to you to adapt it t
 
 
 
+## Inspirations
+
+* C++'s [Range V3](https://github.com/ericniebler/range-v3)
+* JavaScript's [sequency](https://github.com/winterbe/sequency)
+* Java 8's [Stream API](https://docs.oracle.com/javase/8/docs/api/java/util/stream/package-summary.html)
+* Kotlin's [sequences](https://kotlinlang.org/docs/sequences.html)
+* Rust's [iter](https://doc.rust-lang.org/std/iter/index.html#laziness)
+
+
+
 ## Terminology
 
 A **Stream** is a (maybe infinite) sequence of data of one particular type (e.g. `Stream<int>`). It may hold the minimum amount of state to be evaluated. A *Stream* must have a **parent** *Stream* or *Coroutine* from which it gets data.
@@ -119,6 +129,24 @@ auto factory = function* (my_args){
 
 auto gen = factory(args);
 ```
+
+
+
+Callable types may have contravariance/covariance:
+
+```
+template <Arg, R>
+type MyCallable = (Arg) => R;
+
+MyCallable<String, int> a = str => str.length;
+MyCallable<String, int> b = () => 0; // also valid, just ignores the argument
+
+a("str");
+b("str");
+b(); // invalid as it requires an argument even if the implementation doesn't
+```
+
+
 
 
 
