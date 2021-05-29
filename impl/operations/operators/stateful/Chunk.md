@@ -4,9 +4,9 @@ template <T, Callable>
 Stream<T[]> chunks(Stream<T> this, int maxSize){
 	T[] bucket = [];
 
-	return this.pipe(function*(Generator<T> parent) using(bucket, size){
+	return this.pipe(function*(Generator<T> parent) using(bucket, maxSize){
 		foreach(value in parent){
-			if(bucket.length < size){
+			if(bucket.length < maxSize){
 				bucket.push(value);
 			}else{
 				yield bucket;

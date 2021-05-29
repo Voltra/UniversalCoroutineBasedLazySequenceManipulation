@@ -17,6 +17,10 @@ It will propose an object oriented representation, it is up to you to adapt it t
 
 
 
+Implementation details are in the `impl` folder.
+
+
+
 ## Inspirations
 
 * C++'s [Range V3](https://github.com/ericniebler/range-v3)
@@ -72,6 +76,8 @@ A *Sequence Manipulation* that uses **k** *Stateful Operators* is guaranteed to 
 ### Coroutines/Generators
 
 Languages that do not propose generators/coroutines may not directly implement as is. Although, if you have access to iterators, you may implement everything using those.
+
+See the `iterator-hack` directory for examples.
 
 ### Validity
 

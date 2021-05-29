@@ -4,7 +4,7 @@ class Stream<T> : Convertible<static, Iterable<T>> {
 	type GeneratorType = Generator<T>;
 
 	template <U>
-	type GeneratorMapper<U> = (GeneratorType parent) => Generator<U>;
+	type GeneratorMapper<U> = (GeneratorType) => Generator<U>;
 
 	constructor(GeneratorType gen){
 		this.gen = gen;
@@ -23,7 +23,7 @@ class Stream<T> : Convertible<static, Iterable<T>> {
 
 		template <U>
 		Stream<U> pipe(GeneratorMapper<U> mapper){
-			return ThisType{mapper(this.gen)};
+			return Stream<U>{mapper(this.gen)};
 		}
 }
 ```
